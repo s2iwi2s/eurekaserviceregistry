@@ -1,0 +1,53 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.8'
+
+services:
+  fightcluckservice-prod-postgresql:
+    image: postgres:13.2
+    ports:
+      - 127.0.0.1:9430:5432
+    networks:
+      - fightcluck-network-prod
+    volumes:
+      - ~/volumes/s2i/fightcluckservice-prod/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=fightcluckservice-prod
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  naming-server-prod-app:
+    image: namingserver
+    ports:
+      - 127.0.0.1:9761:9761
+    networks:
+      - fightcluck-network-prod
+    environment:
+      server.port: 9761
+      eureka.client.register-with-eureka: false
+      eureka.client.fetch-registry: false
+    depends_on:
+      - fightcluckservice-prod-postgresql
+
+  fightcluckservice-app:
+    image: fightcluckservice
+    ports:
+      - 127.0.0.1:9001:9001
+    networks:
+      - fightcluck-network-prod
+    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://fightcluckservice-dev-postgresql:5432/fightcluckservice-dev
+#      server.port: 8001
+#      eureka.client.service-url.defaultZone: http://naming-server-dev-app:8761/eureka/
+      APP_DELAY_STARTUP: 10
+#      _JAVA_OPTIONS: -Xmx512m -Xms256m -Dspring.profiles.active=prod,api-docs,static
+      _JAVA_OPTIONS: -Xmx512m -Xms256m
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - fightcluckservice-prod-postgresql
+      - naming-server-prod-app
+
+networks:
+  fightcluck-network-prod:
+    name: fightcluck-network-prod
+    driver: bridge
+    external: true
