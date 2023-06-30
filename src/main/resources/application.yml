@@ -1,1 +1,5 @@
+application.version: 1.0B
 
+spring:
+  application:
+    name: eurekaserviceregistry
