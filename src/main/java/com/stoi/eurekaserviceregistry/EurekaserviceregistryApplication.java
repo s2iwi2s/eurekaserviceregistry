@@ -1,17 +1,24 @@
 package com.stoi.eurekaserviceregistry;
 
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Optional;
 
+@EnableDiscoveryClient
+@EnableScheduling
+@EnableAdminServer
 @EnableEurekaServer
 @SpringBootApplication
 public class EurekaserviceregistryApplication {

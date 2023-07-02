@@ -1,0 +1,31 @@
+server.port: 7761
+
+spring.boot.admin:
+      context-path: /
+      client:
+        url:
+          http://localhost:${server.port}
+        instance:
+          service-base-url: http://localhost:${server.port}
+
+eureka:
+  dashboard:
+    path: /admin/eureka
+  instance:
+    hostname: localhost
+    non-secure-port: ${server.port}
+  client:
+    enabled: true
+    server:
+      waitTimeInMsWhenSyncEmpty: 0
+    service-url:
+#      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+      defaultZone: http://${app.login.admin.username}:${app.login.admin.password}@${eureka.instance.hostname}:${server.port}/eureka
+
+logging:
+  level:
+    root: info
+    web: debug
+    com.netflix.eureka: debug
+    com.netflix.discovery: debug
+    org.springframework.web: debug
