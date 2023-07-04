@@ -1,31 +1,32 @@
 server.port: 7761
 
 spring.boot.admin:
-      context-path: /
-      client:
-        url:
-          http://localhost:${server.port}
-        instance:
-          service-base-url: http://localhost:${server.port}
+  client:
+    url:
+      http://localhost:${server.port}
+    instance:
+      service-base-url: http://localhost:${server.port}
 
 eureka:
   dashboard:
-    path: /admin/eureka
   instance:
     hostname: localhost
     non-secure-port: ${server.port}
   client:
     enabled: true
-    server:
-      waitTimeInMsWhenSyncEmpty: 0
     service-url:
 #      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
       defaultZone: http://${app.login.admin.username}:${app.login.admin.password}@${eureka.instance.hostname}:${server.port}/eureka
 
 logging:
+  file:
+    name: ${spring.application.name}.log
+  pattern:
+    file: "%black(%d{ISO8601}) %highlight(%-5level) %yellow(%c{2}): %highlight(%msg%n%throwable)"
   level:
     root: info
-    web: debug
-    com.netflix.eureka: debug
-    com.netflix.discovery: debug
-    org.springframework.web: debug
+    web: info
+    com.netflix.eureka: info
+    com.netflix.discovery: info
+#    org.springframework.web: debug
+#    org.springframework.web.servlet.handler.SimpleUrlHandlerMapping: trace
