@@ -13,7 +13,6 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -42,14 +41,7 @@ class WebSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurity
         SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
         successHandler.setTargetUrlParameter("redirectTo");
         successHandler.setDefaultTargetUrl(this.adminServer.path("/"));
-        http.authorizeHttpRequests((authorizeRequests) -> {
-            log.debug("Registering Authorized Http Requests - permitAll pattern:");
-            for (String pattern : appConfig.getPermitAll()) {
-                log.debug("\t - {}", pattern);
-                authorizeRequests.requestMatchers(new AntPathRequestMatcher(this.adminServer.path(pattern))).permitAll();
-            }
-            authorizeRequests.anyRequest().authenticated();
-        });
+        authorizeRequests(http);
         log.debug("Registering ignored requests pattern:");
         appConfig.getIgnoredRequest().forEach(pattern -> log.debug("\t - {}", pattern));
         http.formLogin((formLogin) -> formLogin.loginPage(this.adminServer.path("/login"))
@@ -60,8 +52,16 @@ class WebSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurity
                 .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers(appConfig.getIgnoredRequest().toArray(String[]::new))
                 );
-
         return http.build();
+    }
+
+    private void authorizeRequests(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((authorizeRequests) -> {
+            log.debug("Registering Authorized Http Requests - permitAll pattern:");
+            appConfig.getPermitAll().forEach(pattern -> log.debug("\t - {}", pattern));
+            authorizeRequests.requestMatchers(appConfig.getPermitAll().toArray(String[]::new)).permitAll();
+            authorizeRequests.anyRequest().authenticated();
+        });
     }
 
     @Bean
