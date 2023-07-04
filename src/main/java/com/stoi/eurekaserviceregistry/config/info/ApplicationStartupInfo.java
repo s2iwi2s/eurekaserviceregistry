@@ -1,4 +1,4 @@
-package com.stoi.eurekaserviceregistry;
+package com.stoi.eurekaserviceregistry.config.info;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -58,6 +58,7 @@ public class ApplicationStartupInfo implements ApplicationListener<ContextRefres
         build.append("\n\tApplication '{}::{}' is running!");
         build.append("\n\tLocal: \t\t{}://localhost:{}{}");
         build.append("\n\tExternal: \t{}://{}:{}{}");
+        build.append("\n\tSwagger: \t{}://localhost:{}{}swagger-ui.html");
         build.append("\n\tProfile(s): \t{}");
         build.append("\n\tPowered by Spring Boot {}");
         build.append("\n----------------------------------------------------------");
@@ -66,6 +67,7 @@ public class ApplicationStartupInfo implements ApplicationListener<ContextRefres
                 env.getProperty("spring.application.name"), env.getProperty("application.version"),
                 protocol, serverPort, contextPath,
                 protocol, hostAddress, serverPort, contextPath,
+                protocol, serverPort, contextPath,
                 env.getActiveProfiles(),
                 buildProp.get("spring-boot.version")
         );

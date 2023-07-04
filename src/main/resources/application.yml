@@ -1,5 +1,26 @@
 application.version: 1.0B
 
+appconfig:
+  ignoredRequest:
+    - /login
+    - /logout
+    - /applications/**
+    - /instances/**
+    - /actuator/**
+    - /eureka/**
+  permitAll:
+    - /eureka/**
+    - /assets/**
+    - /login
+  corsFilter:
+    - /login
+    - /logout
+    - /api/**
+    - /management/**
+    - /config/**
+    - /v3/api-docs/**
+    - /swagger-ui/**
+
 #spring.info:
 #  profile: ${spring.profiles.active}
 #  version: ${version}
@@ -7,6 +28,7 @@ application.version: 1.0B
 #    version: ${git.commit.id.describe:}
 #    commit: ${git.commit.id.abbrev:}
 #    branch: ${git.branch:}
+
 app:
   login:
     eureka:
@@ -17,11 +39,14 @@ app:
       password: admin
 
 springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
   show-spring-cloud-functions: true
   show-actuator: false
-  api-docs.groups.enabled: true
+  swagger-ui:
+    enabled=true:
+    path: /swagger-ui
+  api-docs:
+#    path: /api-docs
+    groups.enabled: true
 
 spring:
   application:
@@ -36,19 +61,20 @@ spring:
     user:
       name: ${app.login.admin.username}
       password: ${app.login.admin.password}
+      roles: USER, ADMIN
   output.ansi.enabled: always
 
 spring.boot.admin:
   context-path: /
   discovery.enabled: true
   client:
+    username: ${spring.security.user.name}
+    password: ${spring.security.user.password}
     instance:
       name: ${spring.application.name}-monitor
       metadata:
         user.name: ${spring.security.user.name}
         user.password: ${spring.security.user.password}
-    username: ${spring.security.user.name}
-    password: ${spring.security.user.password}
   ui:
     enable-toasts: true
     title: Application Monitor
@@ -79,6 +105,7 @@ eureka:
     server.waitTimeInMsWhenSyncEmpty: 0
 
 management:
+  security.enabled: false
   info:
     env.enabled: true
     git:
@@ -86,14 +113,14 @@ management:
       enabled: true
   endpoints:
     web:
-      exposure:
-        include: "*"
+      exposure.include: "*"
     env:
       keys-to-sanitize: password,secret
       show-values: WHEN_AUTHORIZED
     configprops:
       show-values: WHEN_AUTHORIZED
   endpoint:
+    gateway.enabled: true
     enabled-by-default: true
     refresh.enabled: true
     restart.enabled: false
