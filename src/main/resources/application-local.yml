@@ -1,31 +1,57 @@
 server.port: 7761
 
+appconfig:
+  cors:
+    allowed-origins: 'http://localhost:7761,https://localhost:7001,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200'
+    allowed-origin-patterns: '*'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Authorization,Link,X-Total-Count,X-${spring.application.name}-alert,X-${spring.application.name}-error,X-${spring.application.name}-params'
+    allow-credentials: true
+    max-age: 1800
+
 spring.boot.admin:
-      context-path: /
-      client:
-        url:
-          http://localhost:${server.port}
-        instance:
-          service-base-url: http://localhost:${server.port}
+  client:
+    url: http://localhost:${server.port}
+    instance:
+      service-base-url: http://localhost:${server.port}
+#      service-url: http://localhost:${server.port}
+#      service-path: http://localhost:${server.port}
+#      management-base-url: http://localhost:${server.port}/management
+#      health-url: http://localhost:${server.port}/health
+#      management-url: http://localhost:${server.port}/management
+#      health-url: http://localhost:${server.port}//health
+#      management-url: http://localhost:${server.port}
+
 
 eureka:
-  dashboard:
-    path: /admin/eureka
   instance:
     hostname: localhost
     non-secure-port: ${server.port}
   client:
     enabled: true
-    server:
-      waitTimeInMsWhenSyncEmpty: 0
     service-url:
 #      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
       defaultZone: http://${app.login.admin.username}:${app.login.admin.password}@${eureka.instance.hostname}:${server.port}/eureka
+#    webclient.enabled: true
+
 
 logging:
+  file:
+    name: ${spring.application.name}.log
+  pattern:
+    file: "%black(%d{ISO8601}) %highlight(%-5level) %yellow(%c{2}): %highlight(%msg%n%throwable)"
   level:
     root: info
-    web: debug
-    com.netflix.eureka: debug
-    com.netflix.discovery: debug
-    org.springframework.web: debug
+    web: info
+    com.stoi: debug
+#    org.springframework.cloud: trace
+#    com.netflix.eureka: debug
+#    com.netflix.discovery: debug
+    com.netflix.discovery.shared.transport: trace
+    org.zalando.logbook: TRACE
+#    org.springframework.web.servlet.mvc.method.annotation: trace
+#    org.springframework.security.web: trace
+#    org.springframework.cloud.netflix.eureka.serviceregistry: trace
+#    org.springframework.web: debug
+#    org.springframework.web.servlet.handler.SimpleUrlHandlerMapping: trace

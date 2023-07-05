@@ -10,9 +10,10 @@
     </parent>
     <groupId>com.stoi</groupId>
     <artifactId>eurekaserviceregistry</artifactId>
-    <version>1.0.0.esbb</version>
+    <version>1.0.0b</version>
     <name>eurekaserviceregistry</name>
     <description>eurekaserviceregistry</description>
+
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
@@ -20,9 +21,18 @@
         <spring-boot-admin-starter-server.version>3.1.0</spring-boot-admin-starter-server.version>
         <spring-boot-admin-starter-client.version>3.1.0</spring-boot-admin-starter-client.version>
         <spring-boot-admin-server-ui.version>3.0.2</spring-boot-admin-server-ui.version>
+        <git-commit-id-maven-plugin.version>6.0.0</git-commit-id-maven-plugin.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.1.0</springdoc-openapi-starter-webmvc-ui.version>
+        <jolokia-core.version>1.7.2</jolokia-core.version>
+        <logbook.version>2.16.0</logbook.version>
     </properties>
+
     <dependencies>
         <!-- spring-boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -34,6 +44,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -53,18 +68,31 @@
             <version>${spring-boot-admin-server-ui.version}</version>
         </dependency>
         <dependency>
-        <groupId>de.codecentric</groupId>
-        <artifactId>spring-boot-admin-starter-client</artifactId>
-        <version>${spring-boot-admin-starter-client.version}</version>
-    </dependency>
-        <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>
             <version>${spring-boot-admin-starter-client.version}</version>
         </dependency>
+        <!-- Swagger UI -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+        </dependency>
+        <!-- etc -->
+        <dependency>
+            <groupId>io.github.git-commit-id</groupId>
+            <artifactId>git-commit-id-maven-plugin</artifactId>
+            <version>${git-commit-id-maven-plugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-core</artifactId>
+            <version>${jolokia-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>logbook-spring-boot-starter</artifactId>
+            <version>${logbook.version}</version>
         </dependency>
         <!-- test -->
         <dependency>
@@ -73,6 +101,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -97,6 +126,13 @@
                             <goal>repackage</goal>
                             <goal>build-info</goal>
                         </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <java.version>${java.version}</java.version>
+                                <spring-boot.version>${parent.version}</spring-boot.version>
+                                <time>${maven.build.timestamp}</time>
+                            </additionalProperties>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
@@ -104,7 +140,30 @@
                     <addResources>false</addResources>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>${git-commit-id-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <commitIdGenerationMode>full</commitIdGenerationMode>
+                    <excludeProperties>
+                        <excludeProperty>^git.build.number$</excludeProperty>
+                    </excludeProperties>
+                </configuration>
+            </plugin>
         </plugins>
+
         <pluginManagement>
             <plugins>
                 <plugin>

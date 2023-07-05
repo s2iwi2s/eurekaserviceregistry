@@ -1,5 +1,34 @@
 application.version: 1.0B
 
+appconfig:
+  ignoredRequest:
+    - /login
+    - /logout
+    - /applications/**
+    - /instances/**
+    - /actuator/**
+    - /eureka/**
+  permitAll:
+    - /assets/**
+    - /login
+    - /eureka/**
+  corsFilter:
+    - /login
+    - /logout
+    - /api/**
+    - /management/**
+    - /config/**
+    - /v3/api-docs/**
+    - /admin/**
+
+#spring.info:
+#  profile: ${spring.profiles.active}
+#  version: ${version}
+#  git:
+#    version: ${git.commit.id.describe:}
+#    commit: ${git.commit.id.abbrev:}
+#    branch: ${git.branch:}
+
 app:
   login:
     eureka:
@@ -9,112 +38,187 @@ app:
       username: admin
       password: admin
 
+springdoc:
+  show-spring-cloud-functions: true
+  show-actuator: false
+  swagger-ui:
+    enabled=true:
+    path: /admin/swagger-ui
+  api-docs:
+#    path: /api-docs
+    groups.enabled: true
 
 spring:
   application:
     name: eurekaserviceregistry
+    instance-id: ${spring.application.name}:${random.uuid}
+    admin.enabled: true
+  devtools.add-properties: false
+  jmx:
+    enabled: false
+  data:
+    web:
+      pageable:
+        max-page-size: 2147483647
+    rest:
+      max-page-size: 2147483647
+#  config.import: "optional:configserver:"
+  jackson:
+    serialization:
+      indent-output: true
   security:
     user:
       name: ${app.login.admin.username}
       password: ${app.login.admin.password}
-#  boot:
-#    admin:
-#      client:
-#        instance:
-#          name: ${spring.application.name}-monitor
-#          metadata:
-#            user.name: ${spring.security.user.name}
-#            user.password: ${spring.security.user.password}
-#        username: ${spring.security.user.name}
-#        password: ${spring.security.user.password}
-#      ui:
-#        enable-toasts: true
-#        title: Application Monitor
-  output:
-    ansi:
-      enabled: always
+      roles: USER, ADMIN
+  output.ansi:
+    enabled: always
+    console-available: true
+  main:
+    allow-bean-definition-overriding: true
+  task:
+    execution:
+      thread-name-prefix: ${spring.application.name}-task-
+      pool:
+        core-size: 5
+        max-size: 50
+        queue-capacity: 1000
+    scheduling:
+      thread-name-prefix: ${spring.application.name}-scheduling-
+      pool:
+        size: 2
 
 spring.boot.admin:
-  discovery:
-    enabled: true
+  context-path: /
+  discovery.enabled: true
   client:
+    username: ${spring.security.user.name}
+    password: ${spring.security.user.password}
     instance:
       name: ${spring.application.name}-monitor
       metadata:
         user.name: ${spring.security.user.name}
         user.password: ${spring.security.user.password}
-    username: ${spring.security.user.name}
-    password: ${spring.security.user.password}
   ui:
     enable-toasts: true
     title: Application Monitor
+    brand: "<span>Application Monitor</span>"
+    theme:
+      background-enabled: false
+      color: #42d3a5
 
 eureka:
+  dashboard:
+    enabled: true
+    path: /admin/eureka
   instance:
-    health-check-url-path: /actuator/health
     instance-id: ${spring.application.name}:${random.uuid}
+    appname: ${spring.application.name}:${random.uuid}
+    app-group-name: ${spring.application.name}:group:${random.uuid}
+    health-check-url-path: /actuator/health
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 5
+    prefer-ip-address: true
     metadata-map:
       startup: ${random.int}
-    prefer-ip-address: true
+      zone: primary
   client:
     enabled: true
     fetch-registry: true
+    webclient.enabled: true
     register-with-eureka: false
     initial-instance-info-replication-interval-seconds: 5
     instance-info-replication-interval-seconds: 10
     registry-fetch-interval-seconds: 10
-    server:
-      waitTimeInMsWhenSyncEmpty: 0
+    healthcheck.enabled: true
+    server.waitTimeInMsWhenSyncEmpty: 0
 
 management:
+  security.enabled: false
   info:
-    env:
-      enabled: true
+    env.enabled: true
     git:
       mode: full
+      enabled: true
   endpoints:
     web:
-      exposure:
-        include: "*"
+      exposure.include: '*'
+      base-path: /management
     env:
       keys-to-sanitize: password,secret
       show-values: WHEN_AUTHORIZED
     configprops:
       show-values: WHEN_AUTHORIZED
   endpoint:
+    gateway.enabled: true
     enabled-by-default: true
-    refresh:
-      enabled: true
-    restart:
-      enabled: false
-    shutdown:
-      enabled: true
+    refresh.enabled: true
+    restart.enabled: false
+    shutdown.enabled: true
     info:
       enabled: true
       show-values: WHEN_AUTHORIZED
     env:
       keys-to-sanitize: password,secret
       show-values: WHEN_AUTHORIZED
-      post:
-        enabled: true
-    health:
-      show-details: WHEN_AUTHORIZED
-    configprops:
-      show-values: WHEN_AUTHORIZED
+      post.enabled: true
+    health.show-details: WHEN_AUTHORIZED
+    configprops.show-values: WHEN_AUTHORIZED
+  metrics:
+    enable:
+      http: true
+      jvm: true
+      logback: true
+      process: true
+      system: true
+    distribution:
+      percentiles-histogram:
+        all: true
+      percentiles:
+        all: 0, 0.5, 0.75, 0.95, 0.99, 1.0
+    tags:
+      application: ${spring.application.name}
+    web:
+      server:
+        request:
+          autotime:
+            enabled: true
 
 
-#  spring.boot.admin.client.url=http://localhost:8080
-#  management.endpoints.web.exposure.include=*
-#  management.info.env.enabled: true
+
+logbook:
+  level: trace
+  include:
+    - /api/**
+    - /admin/**
+    - /applications/**
+    - /instances/**
+    - /actuator/**
+    - /eureka/**
+    - /v3/api-docs
+#  exclude:
+#    - /actuator/health
+#    - /api/admin/**
+  filter.enabled: true
+  secure-filter.enabled: true
+  format.style: http
+  strategy: body-only-if-status-at-least
+  minimum-status: 400
+#  obfuscate:
+#    headers:
+#      - Authorization
+#      - X-Secret
+#    parameters:
+#      - access_token
+#      - password
+#  write:
+#    chunk-size: 1000
 
 logging:
-  file:
-    name: /var/log/${spring.application.name}.log
   pattern:
-    console: "%black(%d{ISO8601}) %highlight(%-5level) %yellow(%c{2}): %msg%n%throwable"
-    file: "%black(%d{ISO8601}) %highlight(%-5level) %yellow(%c{2}): %msg%n%throwable"
+    console: "%black(%d{ISO8601}) %highlight(%-5level) %yellow(%c{2}): %highlight(%msg%n%throwable)"
+#    console: "%black(%d{ISO8601}) %highlight(%-5level) [%thread] %logger{0} %yellow(%c{2}): %msg%n%throwable"
+#    file: "%black(%d{ISO8601}) %highlight(%-5level) %yellow(%c{2}): %msg%n%throwable"
 #    file: "%black(%d{ISO8601}) %highlight(%-5level) %yellow(%C{1}): %msg%n%throwable"
 #    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
 #    file: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
