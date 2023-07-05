@@ -38,10 +38,10 @@ class WebSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurity
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-        successHandler.setTargetUrlParameter("redirectTo");
-        successHandler.setDefaultTargetUrl(this.adminServer.path("/"));
-        authorizeRequests(http);
+        SavedRequestAwareAuthenticationSuccessHandler successHandler = createSuccessHandler();
+
+        setAuthorizedRequests(http);
+
         log.debug("Registering ignored requests pattern:");
         appConfig.getIgnoredRequest().forEach(pattern -> log.debug("\t - {}", pattern));
         http.formLogin((formLogin) -> formLogin.loginPage(this.adminServer.path("/login"))
@@ -50,12 +50,18 @@ class WebSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurity
                 .httpBasic(Customizer.withDefaults())
 //                .csrf((csrf) -> csrf.disable());
                 .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(appConfig.getIgnoredRequest().toArray(String[]::new))
-                );
+                        .ignoringRequestMatchers(appConfig.getIgnoredRequest().toArray(String[]::new)));
         return http.build();
     }
 
-    private void authorizeRequests(HttpSecurity http) throws Exception {
+    private SavedRequestAwareAuthenticationSuccessHandler createSuccessHandler() {
+        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        successHandler.setTargetUrlParameter("redirectTo");
+        successHandler.setDefaultTargetUrl(this.adminServer.path("/"));
+        return successHandler;
+    }
+
+    private void setAuthorizedRequests(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorizeRequests) -> {
             log.debug("Registering Authorized Http Requests - permitAll pattern:");
             appConfig.getPermitAll().forEach(pattern -> log.debug("\t - {}", pattern));
@@ -75,6 +81,7 @@ class WebSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurity
                 source.registerCorsConfiguration(pattern, config);
             }
         }
+
         return new CorsFilter(source);
     }
 

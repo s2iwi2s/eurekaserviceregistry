@@ -23,6 +23,8 @@
         <spring-boot-admin-server-ui.version>3.0.2</spring-boot-admin-server-ui.version>
         <git-commit-id-maven-plugin.version>6.0.0</git-commit-id-maven-plugin.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.1.0</springdoc-openapi-starter-webmvc-ui.version>
+        <jolokia-core.version>1.7.2</jolokia-core.version>
+        <logbook.version>2.16.0</logbook.version>
     </properties>
 
     <dependencies>
@@ -70,11 +72,6 @@
             <artifactId>spring-boot-admin-starter-client</artifactId>
             <version>${spring-boot-admin-starter-client.version}</version>
         </dependency>
-        <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-client</artifactId>
-            <version>${spring-boot-admin-starter-client.version}</version>
-        </dependency>
         <!-- Swagger UI -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -86,6 +83,16 @@
             <groupId>io.github.git-commit-id</groupId>
             <artifactId>git-commit-id-maven-plugin</artifactId>
             <version>${git-commit-id-maven-plugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-core</artifactId>
+            <version>${jolokia-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>logbook-spring-boot-starter</artifactId>
+            <version>${logbook.version}</version>
         </dependency>
         <!-- test -->
         <dependency>
@@ -123,6 +130,7 @@
                             <additionalProperties>
                                 <java.version>${java.version}</java.version>
                                 <spring-boot.version>${parent.version}</spring-boot.version>
+                                <time>${maven.build.timestamp}</time>
                             </additionalProperties>
                         </configuration>
                     </execution>

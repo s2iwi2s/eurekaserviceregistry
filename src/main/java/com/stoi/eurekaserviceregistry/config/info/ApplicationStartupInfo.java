@@ -55,10 +55,11 @@ public class ApplicationStartupInfo implements ApplicationListener<ContextRefres
 
         StringBuilder build = new StringBuilder();
         build.append("\n----------------------------------------------------------");
-        build.append("\n\tApplication '{}::{}' is running!");
+        build.append("\n\t::::: Application '{}::{}' is running! :::::");
         build.append("\n\tLocal: \t\t{}://localhost:{}{}");
         build.append("\n\tExternal: \t{}://{}:{}{}");
-        build.append("\n\tSwagger: \t{}://localhost:{}{}swagger-ui.html");
+        build.append("\n\tSwagger: \t{}://localhost:{}{}admin/swagger-ui");
+        build.append("\n\tEureka: \t{}://localhost:{}{}admin/eureka");
         build.append("\n\tProfile(s): \t{}");
         build.append("\n\tPowered by Spring Boot {}");
         build.append("\n----------------------------------------------------------");
@@ -68,6 +69,7 @@ public class ApplicationStartupInfo implements ApplicationListener<ContextRefres
                 protocol, serverPort, contextPath,
                 protocol, hostAddress, serverPort, contextPath,
                 protocol, serverPort, contextPath,
+                protocol, serverPort, contextPath,
                 env.getActiveProfiles(),
                 buildProp.get("spring-boot.version")
         );
@@ -76,7 +78,7 @@ public class ApplicationStartupInfo implements ApplicationListener<ContextRefres
     private void buildInfo() {
         StringBuilder build = new StringBuilder();
         build.append("\n----------------------------------------------------------");
-        build.append("\n\t=> BUILD INFORMATION");
+        build.append("\n\t::::: BUILD INFORMATION :::::");
         build.append("\n----------------------------------------------------------");
         build.append("\n\t=> Version: \t{}");
         build.append("\n\t=> Build Time: \t{}");
@@ -100,13 +102,12 @@ public class ApplicationStartupInfo implements ApplicationListener<ContextRefres
     private void eurekaInfo() {
         StringBuilder build = new StringBuilder();
         build.append("\n----------------------------------------------------------");
-        build.append("\n\t=> EUREKA INFORMATION");
+        build.append("\n\t::::: EUREKA INFORMATION :::::");
         build.append("\n----------------------------------------------------------");
         build.append("\n\t=> Default Zone: \t{}");
         build.append("\n\t=> Host Name: \t\t{}");
         build.append("\n\t=> Port: \t\t{}");
         build.append("\n\t=> Instance ID: \t{}");
-
         build.append("\n----------------------------------------------------------");
 
         log.info(build.toString(),
