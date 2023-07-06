@@ -1,4 +1,4 @@
-//package com.stoi.eurekaserviceregistry.config;
+//package com.stoi.eurekaserviceregistry.config.info;
 //
 //import jakarta.servlet.FilterChain;
 //import jakarta.servlet.ServletException;
@@ -19,7 +19,7 @@
 //@Component
 //@WebFilter(urlPatterns = "/*")
 //@Order(-999)
-//public class AccessLogFilter extends OncePerRequestFilter {
+//public class RequestLogInfoFilter extends OncePerRequestFilter {
 //    private final Logger log = LoggerFactory.getLogger(this.getClass());
 //
 //    @Override

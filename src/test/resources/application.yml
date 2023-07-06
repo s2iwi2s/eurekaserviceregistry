@@ -1,12 +1,14 @@
 application.version: 1.0B
+
+
 appconfig:
   authRequest:
-    #    - /api/**
+#    - /api/**
     - /admin/**
     - /admin/swagger-ui/**
   ignoredRequest:
     - /api/**
-    #       Swagger UI v2
+#       Swagger UI v2
     - v2/api-docs,
     - /swagger-resources
     - swagger-resources
@@ -19,76 +21,40 @@ appconfig:
     - /swagger-ui.html
     - swagger-ui.html
     - webjars/**
-    #       Swagger UI v3
+#       Swagger UI v3
     - /v3/api-docs/**
     - v3/api-docs/**
     - /swagger-ui/**
     - swagger-ui/**
-    #       Actuators
+#       Actuators
     - /actuator/**
     - /health/**
-    #       mine
+#       mine
     - /login
     - /logout
     - /applications/**
     - /instances/**
-    - /eureka/**
-  #      - /api/**
+#      - /eureka/**
+#      - /api/**
   permitAll:
-    - /eureka/**
-    - /assets/**
-    - /login
     - swagger-ui/**
     - /swagger-ui/**
     - v3/api-docs/**
     - /v3/api-docs/**
     - /eureka/**
-  #      - /api/**
-  #      - /assets/**
-  #      - /login
+#      - /api/**
+#      - /assets/**
+#      - /login
   corsFilter:
     - /management/**
     - /v2/api-docs/**
     - /v3/api-docs/**
     - /swagger-resources
     - /swagger-ui/**
-    - /admin/**
 #      - /login
 #      - /logout
 #      - /config/**
 #      - /admin/**
-
-#appconfig:
-#  authRequest:
-#    - /
-#    - /admin/**
-#    - /admin/swagger-ui/**
-#  ignoredRequest:
-#    - /login
-#    - /logout
-#    - /applications/**
-#    - /instances/**
-#    - /actuator/**
-#    - /eureka/**
-#  permitAll:
-#    - /assets/**
-#    - /login
-#    - /eureka/**
-#  corsFilter:
-#    - /login
-#    - /logout
-#    - /management/**
-#    - /config/**
-#    - /v3/api-docs/**
-#    - /admin/**
-
-#spring.info:
-#  profile: ${spring.profiles.active}
-#  version: ${version}
-#  git:
-#    version: ${git.commit.id.describe:}
-#    commit: ${git.commit.id.abbrev:}
-#    branch: ${git.branch:}
 
 app:
   login:

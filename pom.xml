@@ -23,8 +23,8 @@
         <spring-boot-admin-server-ui.version>3.0.2</spring-boot-admin-server-ui.version>
         <git-commit-id-maven-plugin.version>6.0.0</git-commit-id-maven-plugin.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.1.0</springdoc-openapi-starter-webmvc-ui.version>
-        <jolokia-core.version>1.7.2</jolokia-core.version>
-        <logbook.version>2.16.0</logbook.version>
+        <jjwt-api.version>0.11.5</jjwt-api.version>
+        <problem-spring-web.version>0.23.0</problem-spring-web.version>
     </properties>
 
     <dependencies>
@@ -36,10 +36,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -55,6 +51,33 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
+        </dependency>
+        <!-- security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>problem-spring-web</artifactId>
+            <version>${problem-spring-web.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt-api.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt-api.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <!-- spring-boot-admin -->
         <dependency>
@@ -85,21 +108,31 @@
             <version>${git-commit-id-maven-plugin.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jolokia</groupId>
-            <artifactId>jolokia-core</artifactId>
-            <version>${jolokia-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>logbook-spring-boot-starter</artifactId>
-            <version>${logbook.version}</version>
-        </dependency>
-        <!-- test -->
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -129,7 +162,7 @@
                         <configuration>
                             <additionalProperties>
                                 <java.version>${java.version}</java.version>
-                                <spring-boot.version>${parent.version}</spring-boot.version>
+                                <spring-boot.version>${project.parent.version}</spring-boot.version>
                                 <time>${maven.build.timestamp}</time>
                             </additionalProperties>
                         </configuration>
