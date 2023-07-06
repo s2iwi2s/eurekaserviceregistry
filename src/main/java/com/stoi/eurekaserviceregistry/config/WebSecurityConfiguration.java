@@ -43,14 +43,15 @@ class WebSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurity
         setAuthorizedRequests(http);
 
         log.debug("Registering ignored requests pattern:");
-        appConfig.getIgnoredRequest().forEach(pattern -> log.debug("\t - {}", pattern));
+        this.appConfig.getIgnoredRequest().forEach(pattern -> log.debug("\t - {}", pattern));
+
         http.formLogin((formLogin) -> formLogin.loginPage(this.adminServer.path("/login"))
                         .successHandler(successHandler))
                 .logout((logout) -> logout.logoutUrl(this.adminServer.path("/logout")))
                 .httpBasic(Customizer.withDefaults())
 //                .csrf((csrf) -> csrf.disable());
                 .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(appConfig.getIgnoredRequest().toArray(String[]::new)));
+                        .ignoringRequestMatchers(this.appConfig.getIgnoredRequest().toArray(String[]::new)));
         return http.build();
     }
 
@@ -64,19 +65,22 @@ class WebSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurity
     private void setAuthorizedRequests(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorizeRequests) -> {
             log.debug("Registering Authorized Http Requests - permitAll pattern:");
-            appConfig.getPermitAll().forEach(pattern -> log.debug("\t - {}", pattern));
-            authorizeRequests.requestMatchers(appConfig.getPermitAll().toArray(String[]::new)).permitAll();
-            authorizeRequests.anyRequest().authenticated();
+
+            this.appConfig.getPermitAll().forEach(pattern -> log.debug("\t - {}", pattern));
+            authorizeRequests.requestMatchers(this.appConfig.getPermitAll().toArray(String[]::new)).permitAll()
+//                    .requestMatchers(this.appConfig.getAuthRequest().toArray(String[]::new)).authenticated()
+                    .anyRequest().authenticated();
+//                    .anyRequest().denyAll();
         });
     }
-
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = appConfig.getCors();
+        CorsConfiguration config = this.appConfig.getCors();
+
         if (!CollectionUtils.isEmpty(config.getAllowedOrigins()) || !CollectionUtils.isEmpty(config.getAllowedOriginPatterns())) {
             log.debug("Registering CORS filter pattern");
-            for (String pattern : appConfig.getCorsFilter()) {
+            for (String pattern : this.appConfig.getCorsFilter()) {
                 log.debug("\t - {}", pattern);
                 source.registerCorsConfiguration(pattern, config);
             }

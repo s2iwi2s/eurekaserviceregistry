@@ -1,0 +1,25 @@
+${AnsiColor.BRIGHT_GREEN}
+:::::::::::::::::::::::::::::::::::::::::::::::
+${AnsiColor.BRIGHT_WHITE}
+    ..######..########..#######..####
+    .##....##....##....##.....##..##.
+    .##..........##....##.....##..##.
+    ..######.....##....##.....##..##.
+    .......##....##....##.....##..##.
+    .##....##....##....##.....##..##.
+    ..######.....##.....#######..####
+
+      ${AnsiColor.DEFAULT}Powered by Spring Boot ${AnsiColor.BRIGHT_WHITE}${spring-boot.version}
+${AnsiColor.BRIGHT_GREEN}
+:::::::::::::::::::::::::::::::::::::::::::::::
+
+${AnsiColor.BRIGHT_YELLOW}::${spring.application.name} ::${application.version}
+${AnsiColor.BRIGHT_YELLOW}=> Port: ${server.port}
+${AnsiColor.BRIGHT_YELLOW}=> DS URL: ${spring.datasource.url}
+${AnsiColor.BRIGHT_YELLOW}=> DS Username: ${spring.datasource.username}
+${AnsiColor.BRIGHT_YELLOW}=> Eureka: ${eureka.client.service-url.defaultZone}
+${AnsiColor.BRIGHT_YELLOW}=> Profile(s): ${spring.profiles.active}
+
+${AnsiColor.BRIGHT_GREEN}
+:::::::::::::::::::::::::::::::::::::::::::::::
+${AnsiColor.DEFAULT}

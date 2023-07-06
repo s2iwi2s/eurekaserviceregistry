@@ -42,9 +42,11 @@ logging:
   pattern:
     file: "%black(%d{ISO8601}) %highlight(%-5level) %yellow(%c{2}): %highlight(%msg%n%throwable)"
   level:
-    root: info
+    root: debug
     web: info
     com.stoi: debug
+#    org.springframework.web: debug
+#    org.springframework.web.client.RestTemplate: trace
 #    org.springframework.web.filter.CommonsRequestLoggingFilter: debug
 #    org.springframework.cloud: trace
 #    com.netflix.eureka: debug
@@ -52,7 +54,7 @@ logging:
 #    com.netflix.discovery.shared.transport: trace
 #    org.zalando.logbook: TRACE
 #    org.springframework.web.servlet.mvc.method.annotation: trace
-#    org.springframework.security.web: trace
+    org.springframework.security.web: trace
 #    org.springframework.cloud.netflix.eureka.serviceregistry: trace
 #    org.springframework.web: debug
 #    org.springframework.web.servlet.handler.SimpleUrlHandlerMapping: trace

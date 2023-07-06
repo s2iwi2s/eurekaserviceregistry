@@ -1,0 +1,35 @@
+server.port: 8761
+
+appconfig:
+  cors:
+    # Allow Ionic for JHipster by default (* no longer allowed in Spring Boot 2.4+)
+    allowed-origins: 'http://localhost:8761,https://localhost:8001,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200'
+    # Enable CORS when running in GitHub Codespaces
+    allowed-origin-patterns: 'https://*.githubpreview.dev'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Authorization,Link,X-Total-Count,X-${spring.application.name}-alert,X-${spring.application.name}-error,X-${spring.application.name}-params'
+    allow-credentials: true
+    max-age: 1800
+
+spring.boot.admin:
+  client:
+    url:
+      http://eurekaserviceregistry-dev:${server.port}
+    instance:
+      service-base-url: http://eurekaserviceregistry-dev:${server.port}
+
+eureka:
+  instance:
+    hostname: eurekaserviceregistry-dev
+    non-secure-port: ${server.port}
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://${app.login.admin.username}:${app.login.admin.password}@${eureka.instance.hostname}:${server.port}/eureka
+
+logging:
+  level:
+    root: info
+    com.netflix.eureka: debug
+    com.netflix.discovery: debug
